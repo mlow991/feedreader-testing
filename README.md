@@ -10,12 +10,12 @@ I've added tests for two extra features for this application that have yet to be
 1.	A Delete Feed feature
 	* Each feed item in the menu will have an 'x' button that allows for the instant deletion of the feed from the menu.
 	* Jasmine tests will do the following:
-		1.	Make sure that each menu item and 'x' button pair have the same identifying index.  This test will currently fail because the delete button does not currently exist.
+		1.	Make sure that each menu item and 'x' button pair have the same identifying index.  This test will currently fail because the delete buttons do not currently exist.
 		2.	Make sure that the correct element is deleted from the list menu.  This test will currently fail because the delete function has not been written yet.
 2.	A color scheme changer
-	* Any rgb color code will work when input, but it must be in the format 'rgb(x, x, x)' so that it can be compared to the current color.
+	* The color scheme of the App is currently set to green.  A color scheme button, when clicked, will call the changeColor function which will change the color to red.
 	* Jasmine test will do the following:
-		1.	Make sure that the color for the menu and the header have both been changed to the specified color.  This test will currently fail because the color change function has not been written yet.
+		1.	Make sure that the color for the menu and the header have both been changed to the specified color.  The specified color is hard-coded in the app.js.  This test will currently fail because the color change function has not been written yet.
 
 ## What did I learn?
 
