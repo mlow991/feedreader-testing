@@ -9,41 +9,32 @@
  * to ensure they don't run until the DOM is ready.
  */
 $(function() {
-    /* This is our first test suite - a test suite just contains
-    * a related set of tests. This suite is all about the RSS
-    * feeds definitions, the allFeeds variable in our application.
-    */
-    var len = allFeeds.length;
-    var dane;
-
-    beforeAll(function() {
-        function definedAndNotEmpty() {
-            this.test = function() {
-                expect(this.var).toBeDefined();
-                expect(this.var.length).not.toBe(0);
-            };
-        }
-        dane = new definedAndNotEmpty();
-    });
-
+    // Suite for the collection of RSS feeds
     describe('RSS Feeds', function() {
-        /* This is our first test - it tests to make sure that the
-         * allFeeds variable has been defined and that it is not
-         * empty. Experiment with this before you get started on
-         * the rest of this project. What happens when you change
-         * allFeeds in app.js to be an empty array and refresh the
-         * page?
-         */
+        // Define variables used within the scope of multiple specs
+        var len = allFeeds.length;
+        var dane;
 
+        beforeAll(function() {
+            // Create class that verifies a variable is defined
+            // and is not empty
+            function DefinedAndNotEmpty() {
+                this.test = function() {
+                    expect(this.var).toBeDefined();
+                    expect(this.var.length).not.toBe(0);
+                };
+            }
+            dane = new DefinedAndNotEmpty();
+        });
+
+        // Checks to see if allFeeds is defined and is not empty
         it('are defined', function() {
             dane.var = allFeeds;
             dane.test();
         });
 
-        /* TODO: Write a test that loops through each feed
-         * in the allFeeds object and ensures it has a URL defined
-         * and that the URL is not empty.
-         */
+        // Checks to see if each element in allFeeds has a url defined
+        // and is not empty
         it('url is defined and is not empty', function() {
             for(i = 0; i < len; i++) {
                 dane.var = allFeeds[i].url;
@@ -51,11 +42,8 @@ $(function() {
             }
         }); 
 
-
-        /* TODO: Write a test that loops through each feed
-         * in the allFeeds object and ensures it has a name defined
-         * and that the name is not empty.
-         */
+        // Checks to see if each element has a name and is also not
+        // empty
         it('name is defined and is not empty', function() {
             for(i = 0; i < len; i++) {
                 dane.var = allFeeds[i].name;                
@@ -66,76 +54,136 @@ $(function() {
 
 
 
-    /* TODO: Write a new test suite named "The menu" */
+    // Suite for the menu that can be toggled on and off the screen.
+    // Is initially offscreen.
     describe('The Menu', function() {
-        /* TODO: Write a test that ensures the menu element is
-         * hidden by default. You'll have to analyze the HTML and
-         * the CSS to determine how we're performing the
-         * hiding/showing of the menu element.
-         */
-
+        // Checks to see if the menu is intially hidden from the user
         it('menu is initially hidden from view', function() {
             expect($('body').hasClass('menu-hidden')).toBe(true);
         });
 
-         /* TODO: Write a test that ensures the menu changes
-          * visibility when the menu icon is clicked. This test
-          * should have two expectations: does the menu display when
-          * clicked and does it hide when clicked again.
-          */
+        // Checks to see if the menu button functions properly (each click
+        // either toggles the menu on/off the screen)
         it('menu is displayed when icon is clicked, and hides when clicked a second time', function() {
+            // Execute a click command on the menu icon
             $('.menu-icon-link').click();
+            // Check to see if the 'menu-hidden' class has been removed.
+            // We know the first click will remove the class since the menu
+            // is initally hidden from view.
             expect($('body').hasClass('menu-hidden')).not.toBe(true);
             $('.menu-icon-link').click();
             expect($('body').hasClass('menu-hidden')).toBe(true);
         });
     });
 
-
-    /* TODO: Write a new test suite named "Initial Entries" */
-
+    // Suite for the RSS feed entries that spawn when the page is initially loaded/refreshed
     describe('Initial Entries', function() {
-        /* TODO: Write a test that ensures when the loadFeed
-         * function is called and completes its work, there is at least
-         * a single .entry element within the .feed container.
-         * Remember, loadFeed() is asynchronous so this test wil require
-         * the use of Jasmine's beforeEach and asynchronous done() function.
-         */
+        // Load the feed asynchronously so that the done() method can tell
+        // the spec when to execute.
         beforeEach(function(done) {
             loadFeed(0, function() {
                 done();
             });
         });
 
+        // Checks to see if the initial RSS feed entry count is at least 1.
         it('should have at least one entry', function(done) {
+            // Gather all the entries within the 'feed' class and check the length
+            // of the array.  The collection should have a length of at least 1 to 
+            // pass the test.
             expect($('.feed').find('.entry').length).toBeGreaterThan(0);
             done();
         });
     });
 
-    /* TODO: Write a new test suite named "New Feed Selection" */
-    
+    // Suite for any new feeds that are spawned via the menu
     describe('New Feed Selection', function() {
-        /* TODO: Write a test that ensures when a new feed is loaded
-         * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
-         */
+        // Declare a holder variable for multiple feed data
         var feeds = [];
 
+        // Loads a feed before the spec runs
         beforeEach(function(done) {
             loadFeed(1, function() {
+                // Store the html of the feed in the holder variable
                 feeds.push($('.feed').text());
+                // Vital due to the asynchronous nature of the rss feed
                 done();
             });
         });
 
+        // Checks to see if the content from two different feed loads is
+        // different.
         it('should load new content', function(done) {
+            // Load a different feed from the beforeEach function
             loadFeed(3, function() {
+                // Store the html for this new feed in the holder variable
                 feeds.push($('.feed').text());
+                // Compare the two chunks of html and make sure
+                // that they are different.
                 expect(feeds[0]).not.toEqual(feeds[1]);
                 done();
             });
         });
     });
 
+    // Suite for the delete feed button.
+    // This feature has yet to be added, but might be in the form of
+    // an 'x' button next to each feed in the menu.  Clicking this 'x'
+    // will call the method 'removeFeed(index)' where the 'index' is 
+    // the 'data-id' of the item in the menu.  This is also the position
+    // of the feed within the allFeeds array, and their position in the menu.
+    // After the removeFeed function is called, another function should be called
+    // afterwards that re-assigns the 'data-id' of the remaining
+    // RSS feeds to match the original pattern of "0, 1, 2, 3 etc..."
+    describe('Deleted Feed', function() {
+        // The arbitrary test index
+        var index = 2;
+
+        beforeEach(function() {
+            // A call to removeFeed removes the specified feed from the 
+            // unordered list.
+            removeFeed(index);
+        });
+        // Checks to see if the removed RSS feed is still listed in the menu
+        it('should not be visible in the menu', function() {
+            var item = $('.feed-list').find('a')[index];
+            // The index and the position of the list item in the <a> tag
+            // array are the same value.
+            expect(Number($(item).attr('data-id'))).not.toEqual(index);
+        });
+
+        // Checks to see if the remaining RSS feed's 'data-id' is in 
+        // proper numerical order (0, 1, 2, 3, etc...)
+        it("should not leave a numerical gap in the data-id's of the RSS menu items", function() {
+            var itemIndex = [];
+            var properIndex = [];
+            var item = $('.feed-list').find('a');
+            var len = item.length;
+            for(i = 0; i < len; i++) {
+                itemIndex.push(Number($(item[i]).attr('data-id')));
+                properIndex.push(i);
+            }
+            for(i = 0; i < len; i++) {
+                expect(itemIndex[i]).toEqual(properIndex[i]);
+            }
+        });
+    });
+
+    // Suite for changing the color scheme of the RSS feed page
+    describe('Color Scheme', function() {
+        // Checks to see if the changeColor function actually
+        // changes the color
+        it('should change color', function() {
+            // Since we already know the default color is a form of green
+            // we can choose our changed color to be red and then check to
+            // see if all elements with green color are now red.
+            var red = 'rgb(255, 0, 0)';
+            changeColor(red);
+            // Menu and header are the only two elements for this color scheme.
+            var menu = $(".menu").css('background-color');
+            var header = $('.header').css('background-color');
+            expect(menu).toEqual(red);
+            expect(header).toEqual(red);
+        });
+    });
 }());
