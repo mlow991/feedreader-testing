@@ -139,33 +139,32 @@ $(function() {
         // The arbitrary test index
         var index = 2;
 
-        beforeEach(function() {
-            // A call to removeFeed removes the specified feed from the 
-            // unordered list.
-            removeFeed(index);
+        // Check to see if the list menu's RSS feeds and their 'x' delete button pair
+        // have the same numerical index
+        it("menu items should correspond to their delete buttons", function() {
+            var itemIndex = [];
+            var buttonIndex = [];
+            var item = $('.feed-list').find('a');
+            var button = $('.feed-list').find('button');
+            var len = item.length;
+            for(i = 0; i < len; i++) {
+                itemIndex.push($(item[i]).attr('data-id'));
+                // Uses substring because the button identifier is has a 'b' prefix.
+                // ex: so the first button will be 'b0' and the item will be '0'.
+                // So once the 'b' prefix is removed the two can be compared.
+                buttonIndex.push($(button[i]).attr('data-id').substring(1));
+            }
+            for(i = 0; i < len; i++) {
+                expect(itemIndex[i]).toEqual(buttonIndex[i]);
+            }
         });
         // Checks to see if the removed RSS feed is still listed in the menu
         it('should not be visible in the menu', function() {
+            removeFeed(index);
             var item = $('.feed-list').find('a')[index];
             // The index and the position of the list item in the <a> tag
             // array are the same value.
             expect(Number($(item).attr('data-id'))).not.toEqual(index);
-        });
-
-        // Checks to see if the remaining RSS feed's 'data-id' is in 
-        // proper numerical order (0, 1, 2, 3, etc...)
-        it("should not leave a numerical gap in the data-id's of the RSS menu items", function() {
-            var itemIndex = [];
-            var properIndex = [];
-            var item = $('.feed-list').find('a');
-            var len = item.length;
-            for(i = 0; i < len; i++) {
-                itemIndex.push(Number($(item[i]).attr('data-id')));
-                properIndex.push(i);
-            }
-            for(i = 0; i < len; i++) {
-                expect(itemIndex[i]).toEqual(properIndex[i]);
-            }
         });
     });
 
