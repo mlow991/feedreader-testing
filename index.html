@@ -22,16 +22,16 @@
             <a href="#" class="menu-icon-link">
                 <i class="icon-list"></i>
             </a>
-
+<!--The text in the class .header-title h1 tag is replaced by the title of the feed that is being displayed -->
             <h1 class="header-title">Feeds</h1>
         </div>
 
         <div class="menu">
             <ul class="feed-list"></ul>
         </div>
-
+<!-- Contains the last 4 articles from the respective feed -->
         <div class="feed"></div>
-
+<!-- Feed list item -->
         <script class="tpl-entry" type="text/x-handlebars-template">
             <a class="entry-link" href="{{link}}">
                 <article class="entry">
@@ -40,7 +40,7 @@
                 </article>
             </a>
         </script>
-
+<!-- Menu list item -->
         <script class="tpl-feed-list-item" type="text/x-handlebars-template">
             <li>
                 <a href="#" data-id="{{id}}">{{name}}</a>
